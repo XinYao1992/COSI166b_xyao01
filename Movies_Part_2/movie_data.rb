@@ -9,7 +9,7 @@ class MovieData
             @data = in_file.read
             @test_data
             in_file.close
-        else if args.length == 2
+        elsif args.length == 2
             path = args[0].to_s + "/" + args[1].to_s + ".base"
             path2 = args[0].to_s + "/" + args[1].to_s + ".test"
             in_file = File.open(path, "r")
@@ -163,14 +163,18 @@ class MovieData
     #runs the z.predict method on the first k ratings in the test set and returns a MovieTest object containing the results. 
     def run_test(k=20000)
         z = MovieTest.new()
-        @test_data[0..k-1].each_line do |line|
+        index = 0
+        @test_data.each_line do |line|
             parts = line.split
             z.results.push([parts[0], parts[1], parts[2], predict(parts[0], parts[1])])
+            index += 1
+            if index >= k
+                break
+            end
         end
         return z
     end
     
-end
 
 end
 
