@@ -7,7 +7,6 @@ class MovieData
             path = args[0].to_s + "/u.data"
             in_file = File.open(path, "r")
             @data = in_file.read
-            @test_data
             in_file.close
         elsif args.length == 2
             path = args[0].to_s + "/" + args[1].to_s + ".base"
@@ -68,9 +67,9 @@ class MovieData
                 hashtable.push([m, ppl])
             end
         end
-        hashtable = hashtable.sort_by {|id, ppl| ppl}.reverse
+        hashtable = hashtable.sort_by {|_id, ppl| ppl}.reverse
         (0...hashtable.length).each do |i|
-            id, pup = hashtable[i]
+            id, _pup = hashtable[i]
             list.push(id)
         end
         return list
@@ -84,14 +83,14 @@ class MovieData
         user2_table = @user_movie_rate[user2]#key: movie id; value: rating 
         
         if user1_table.length > user2_table.length
-            user2_table.each do |id, rate|
+            user2_table.each do |id, _rate|
                 if user1_table.include?(id)
                     gap = (user1_table[id].to_i - user2_table[id].to_i).abs
                     similarity += 4 - gap
                 end
             end
         else
-            user1_table.each do |id, rate|
+            user1_table.each do |id, _rate|
                 if user2_table.include?(id)
                     gap = (user1_table[id].to_i - user2_table[id].to_i).abs
                     similarity += 4 - gap
@@ -105,14 +104,14 @@ class MovieData
     #this return a list of users whose tastes are most similar to the tastes of user u
     def most_similar(user)
         candidates = Hash.new()#this array stores the list of user with the similarity to the comparer. key:user id; value:similarity.
-        @user_movie_rate.each do |u, movie_rate_hash|
+        @user_movie_rate.each do |u, _movie_rate_hash|
             if u.to_i != user.to_i
                 sml = similarity(user, u)
                 candidates[u] = sml
             end
         end
-        candidates = candidates.sort_by {|user_id, sml| sml}.reverse
-        best_candidate, similarity = candidates[0]
+        candidates = candidates.sort_by {|_user_id, sml| sml}.reverse
+        best_candidate, _similarity = candidates[0]
         return best_candidate
     end
     
@@ -127,12 +126,11 @@ class MovieData
     end
     
     #returns a floating point number between 1.0 and 5.0 as an estimate of what user u would rate movie m
-    def predict(user, movie)
+    def predict(user, _movie)
         sum = 0.0
         number = 0.0
-        estimate = 0.0
         user_table = @user_movie_rate[user]
-        user_table.each do |m, r|
+        user_table.each do |_m, r|
             sum += r.to_f
             number += 1
         end
@@ -144,7 +142,7 @@ class MovieData
     def movies(user)
         movie_list = Array.new
         user_table = @user_movie_rate[user]
-        user_table.each do |m, r|
+        user_table.each do |m, _r|
             movie_list.push(m)
         end
         return movie_list
@@ -154,7 +152,7 @@ class MovieData
     def viewers(movie)
         user_list = Array.new()
         movie_table = @movie_user_rate[movie]
-        movie_table.each do |u, r|
+        movie_table.each do |u, _r|
             user_list << u
         end
         return user_list

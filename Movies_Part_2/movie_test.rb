@@ -20,7 +20,6 @@ class MovieTest
     #returns the standard deviation of the error
     #Math.sqrt()
     def stddev()
-        sd = 0.0
         gap = 0.0
         mean_error = mean()
         @results.each do |array|
